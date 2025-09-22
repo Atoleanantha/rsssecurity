@@ -3,8 +3,8 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 
 class CloudinaryService {
   final CloudinaryPublic _cloudinary = CloudinaryPublic(
-    'dlssri5bo', // Replace with your Cloudinary cloud name
-    'lyvnzxhl',  // Replace with your upload preset
+    'cloud name', // Replace with your Cloudinary cloud name
+    'preset',  // Replace with your upload preset
     cache: false,
   );
 
