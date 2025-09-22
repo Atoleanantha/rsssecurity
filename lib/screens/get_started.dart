@@ -1,8 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'registration_step1.dart';
 
-class GetStartedScreen extends StatelessWidget {
+class GetStartedScreen extends StatefulWidget {
   const GetStartedScreen({super.key});
+
+  @override
+  State<GetStartedScreen> createState() => _GetStartedScreenState();
+}
+
+class _GetStartedScreenState extends State<GetStartedScreen> {
+  bool _isLoading = false;
+
+  Future<void> _checkInternetAndNavigate(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (connectivityResult != ConnectivityResult.none) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const RegistrationStep1()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("No internet connection. Please try again."),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,48 +59,47 @@ class GetStartedScreen extends StatelessWidget {
 
             return Center(
               child: Container(
-
                 width: isWeb ? constraints.maxWidth * 0.5 : constraints.maxWidth,
                 decoration: BoxDecoration(
-                  color: isWeb?Colors.white:Colors.transparent,
-                  borderRadius: const BorderRadius.all(Radius.circular(20))
+                    color: isWeb ? Colors.white : Colors.transparent,
+                    borderRadius: const BorderRadius.all(Radius.circular(20))
                 ),
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize:isWeb? MainAxisSize.min:MainAxisSize.max,
+                  mainAxisSize: isWeb ? MainAxisSize.min : MainAxisSize.max,
                   children: [
-                    isWeb?SizedBox(height: 10,):const Spacer(),
-                    if(isWeb )Center(
-                      child:  Image.asset(
-                        "assets/logo.png",
-                        width:110,
-                        height: 116,
+                    isWeb ? const SizedBox(height: 10,) : const Spacer(),
+                    if (isWeb)
+                      Center(
+                        child: Image.asset(
+                          "assets/logo.png",
+                          width: 110,
+                          height: 116,
+                        ),
                       ),
-                    ),
-                    isWeb ? SizedBox(height: 20,):const Spacer(),
+                    isWeb ? const SizedBox(height: 20,) : const Spacer(),
                     Text(
                       "RSS \nVisitor Management System",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: isWeb ? 32 : 28,
-                        color:isWeb? Colors.black: Colors.white,
+                        color: isWeb ? Colors.black : Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
-
-                    !isWeb? const Spacer():const SizedBox(height: 20),
+                    !isWeb ? const Spacer() : const SizedBox(height: 20),
                     Text(
                       "Streamline your visitor experience with ease and security.",
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: isWeb ? 26 : 24,
-                        color:isWeb? Colors.black: Colors.white,
+                        color: isWeb ? Colors.black : Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    isWeb?const SizedBox(height: 30,):const Spacer(),
+                    isWeb ? const SizedBox(height: 30,) : const Spacer(),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(237, 27, 36, 1),
@@ -80,14 +112,19 @@ class GetStartedScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegistrationStep1()),
-                        );
-                      },
-                      child: const Text(
+                      onPressed: _isLoading
+                          ? null
+                          : () => _checkInternetAndNavigate(context),
+                      child: _isLoading
+                          ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : const Text(
                         'Get Started',
                         style: TextStyle(
                           color: Colors.white,
@@ -96,7 +133,7 @@ class GetStartedScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    isWeb?const SizedBox(height: 20,):const Spacer(),
+                    isWeb ? const SizedBox(height: 20,) : const Spacer(),
                   ],
                 ),
               ),
@@ -106,23 +143,4 @@ class GetStartedScreen extends StatelessWidget {
       ),
     );
   }
-}
-Route _createSlideRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const RegistrationStep1(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0); // Start offscreen (right side)
-      const end = Offset.zero;
-      const curve = Curves.easeInOut;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      var offsetAnimation = animation.drive(tween);
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-    transitionDuration: Duration(milliseconds: 500),
-  );
 }

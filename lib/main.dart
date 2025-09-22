@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'RSS Security Registration',
 
         theme: ThemeData(
-          // fontFamily: 'Outfit', // Set custom font for the entire app
+          fontFamily: 'Outfit', // Set custom font for the entire app
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),

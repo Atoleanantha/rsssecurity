@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
+  Map<String, dynamic> data={};
+   DetailsPage({super.key, required this.data});
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+
   @override
   Widget build(BuildContext context) {
+    print(widget.data);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -93,21 +96,21 @@ class _DetailsPageState extends State<DetailsPage> {
                                     borderRadius: BorderRadius.all(Radius.circular(12)),
                                     color: Color.fromRGBO(203, 255, 224, 1),
                                   ),
-                                  child: const Column(
+                                  child:  Column(
                                     children: [
-                                      _InfoRow(label: 'Name:', value: 'John Doe'),
-                                      _InfoRow(label: 'Mobile:', value: '9875926984'),
-                                      _InfoRow(label: 'Gender:', value: 'Male'),
+                                      _InfoRow(label: 'Name:', value:'${widget.data["fullName"]}'),
+                                      _InfoRow(label: 'Mobile:', value: '${widget.data['mobile']}'),
+                                      _InfoRow(label: 'Gender:', value: '${widget.data['gender']}'),
                                       _InfoRow(
                                           label: 'Purpose of Visit:',
-                                          value: 'Business Meeting'),
+                                          value:'${widget.data['purpose']}'),
                                       _InfoRow(
-                                          label: 'Host Name:', value: 'Adam Mathews'),
+                                          label: 'Host Name:', value: '${widget.data['host']}'),
                                       _InfoRow(
-                                          label: 'Vehicle Number:', value: '00-000-44'),
+                                          label: 'Vehicle Number:', value: '${widget.data['mobile']}'),
                                       _InfoRow(
-                                          label: 'Checkin Date:', value: '26/02/2025'),
-                                      _InfoRow(label: 'Checkin Time:', value: '11:00 AM'),
+                                          label: 'Checkin Date:', value: '${widget.data['date']}'),
+                                      _InfoRow(label: 'Checkin Time:', value: '${widget.data['time']}'),
                                     ],
                                   ),
                                 ),
@@ -126,7 +129,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   },
                                   icon: const Icon(Icons.logout, color: Colors.white),
                                   label: const Text(
-                                    'Logout',
+                                    'Checkout',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -149,7 +152,31 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
     );
   }
+
+  Widget dataRow(String label,String value){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+      ],
+    );
+
+  }
 }
+
 
 /// A reusable widget for displaying information rows
 class _InfoRow extends StatelessWidget {

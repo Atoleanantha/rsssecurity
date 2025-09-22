@@ -1,0 +1,19 @@
+{
+  "name": "rss_security",
+  "version": "1.0.0",
+  "description": "RSS Security App for Visitor management System",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "homepage": "https://Atoleanantha.github.io/rsssecurity",
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
